@@ -1,28 +1,21 @@
-const axios = require('axios');
-const readline = require('readline');
+const API_KEY = 'AIzaSyDQNCbhk0QrrNuz_I2psmJ5Gub3VKWd_AY';
+const keyword = 'how to tie a tie';
 
-const API_KEY = 'AIzaSyDjK25fVYb4nLKnZpgor8-Eam7jSi8sgTI';
+const searchVolumeUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+  keyword
+)}&key=${API_KEY}&maxResults=0`;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+const fetchSearchVolume = async () => {
+  try {
+    const response = await axios.get(searchVolumeUrl);
+    const totalResults = response.data.pageInfo.totalResults;
+    return totalResults;
+  } catch (error) {
+    console.error('Error fetching search volume:', error);
+    return 0;
+  }
+};
 
-rl.question('Enter the keyword you want to check the search volume for: ', (keyword) => {
-  axios.get('https://www.googleapis.com/youtube/v3/search', {
-    params: {
-      part: 'snippet',
-      q: keyword,
-      key: API_KEY,
-    },
-  })
-  .then(response => {
-   
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error('Error making API request:', error);
-  });
+const searchVolume = await fetchSearchVolume();
 
-  rl.close();
-});
+console.log(`The search volume for the keyword "${keyword}" is ${searchVolume}`);
