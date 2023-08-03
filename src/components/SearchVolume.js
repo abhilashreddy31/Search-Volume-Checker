@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './style.css';
 
-const SearchVolumeChecker = () => {
+const SearchVolume = () => {
   const API_KEY = 'AIzaSyDQNCbhk0QrrNuz_I2psmJ5Gub3VKWd_AY';
   const maxResults = 30;
 
@@ -89,4 +89,4 @@ const SearchVolumeChecker = () => {
   );
 };
 
-export default SearchVolumeChecker;
+export default SearchVolume;

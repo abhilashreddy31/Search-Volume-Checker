@@ -1,10 +1,10 @@
 import React from 'react';
-import SearchVolumeChecker from './components/SearchVolumeChecker';
+import SearchVolume from './components/SearchVolume';
 
 function App() {
   return (
     <div className="App">
-      <SearchVolumeChecker />
+      <SearchVolume />
     </div>
   );
 }
