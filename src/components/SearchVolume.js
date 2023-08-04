@@ -89,7 +89,7 @@ const SearchVolume = () => {
                     <td className='bold'>Published At</td>
                     <td>{result.publishedAt}</td>
                   </tr>
-                  {/* Add video statistics */}
+                 
                   <tr>
                     <td className='bold'>Views</td>
                     <td>{result.stats?.viewCount || 0}</td>
