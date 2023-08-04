@@ -3,10 +3,12 @@ import axios from 'axios';
 import './style.css';
 
 const SearchVolume = () => {
-  const API_KEY = 'AIzaSyDQNCbhk0QrrNuz_I2psmJ5Gub3VKWd_AY'; 
+  const API_KEY = 'AIzaSyChWlVokkrjHosTGxlkazIQ3_e5S8TxYWE'; 
   const maxResults = 30;
 
   const [keyword, setKeyword] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
   const [results, setResults] = useState([]);
   const [searchVolume, setSearchVolume] = useState(0);
 
@@ -15,8 +17,8 @@ const SearchVolume = () => {
   };
 
   const handleSearch = async () => {
-    if (!keyword) {
-      alert('Please enter a keyword.');
+    if (!keyword || !month || !year) {
+      alert('Please enter a keyword, month, and year.');
       return;
     }
 
@@ -37,28 +39,15 @@ const SearchVolume = () => {
       }));
       setResults(extractedResults);
 
-      // Fetch the total number of search results for the keyword
+     
       const searchVolumeUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
         keyword
-      )}&key=${API_KEY}`;
+      )}&key=${API_KEY}&publishedAfter=${year}-${month}-01T00%3A00%3A00Z&publishedBefore=${year}-${month}-31T23%3A59%3A59Z`;
       const volumeResponse = await axios.get(searchVolumeUrl);
       const totalResults = volumeResponse.data.pageInfo.totalResults;
       setSearchVolume(totalResults);
 
-      // Fetch video statistics for each video in the search results
-      const videoIds = extractedResults.map((result) => result.videoId);
-      const videoStatsUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds.join(
-        ','
-      )}&key=${API_KEY}`;
-      const statsResponse = await axios.get(videoStatsUrl);
-      const videoStats = statsResponse.data.items;
-
-      // Update the results with video statistics
-      const updatedResults = extractedResults.map((result, index) => ({
-        ...result,
-        stats: videoStats[index]?.statistics || { viewCount: 0, likeCount: 0, commentCount: 0 },
-      }));
-      setResults(updatedResults);
+      
     } catch (error) {
       console.error('Error fetching search results or statistics:', error);
       alert('Failed to fetch search results. Please try again later.');
@@ -69,12 +58,15 @@ const SearchVolume = () => {
     <div className='container'>
       <h1>YouTube Search Volume Checker</h1>
       <div className='search'>
-        <input type='text' value={keyword} onChange={handleInputChange} placeholder='Search' />
+        <input type='text' value={keyword} onChange={handleInputChange} placeholder='Search' /><br></br>
+        <input type='text' placeholder='Enter Month' value={month} onChange={(e) => setMonth(e.target.value)}/><br></br>
+        <input type='text' placeholder='Enter Year' value={year} onChange={(e) => setYear(e.target.value)} /><br></br>
         <button onClick={handleSearch}>Search</button>
       </div>
+      
       <h2>Monthly Search Volume: {searchVolume}</h2>
       <div className='box-1'>
-        {results.map((result) => (
+      {results.map((result) => (
           <div key={result.videoId}>
             <div className='box-2'>
               <div className='box-3'>
